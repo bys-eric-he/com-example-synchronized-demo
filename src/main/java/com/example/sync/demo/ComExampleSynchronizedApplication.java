@@ -46,5 +46,10 @@ public class ComExampleSynchronizedApplication {
         ParentThread parentThread = new ParentThread(child);
         Thread thread = new Thread(parentThread, "ParentThread");
         thread.start();
+
+        for (int i = 0; i < 2; i++) {
+            Thread lockThread = new LockThread(demoService);
+            lockThread.start();
+        }
     }
 }

@@ -2,6 +2,8 @@ package com.example.sync.demo.service;
 
 import org.springframework.stereotype.Service;
 
+import java.util.concurrent.locks.ReentrantLock;
+
 /**
  * 总结
  * A. 无论synchronized关键字加在方法上还是对象上，如果它作用的对象是非静态的，则它取得的锁是对象；
@@ -52,7 +54,7 @@ public class DemoServiceImpl implements DemoService {
 
     @Override
     public void printLine() {
-        //让synchronized 锁这个类对象的实例，必须保证不同线程调用使用的是同一个实例才能有效锁住
+        //让synchronized 锁这个类对象的实例，必须保证不同线程调用使用的是同一个实例(单例)才能有效锁住
         synchronized (this) {
             System.out.println("线程ID:" + Thread.currentThread().getId() + " printLine开始..");
             try {
@@ -71,13 +73,36 @@ public class DemoServiceImpl implements DemoService {
      */
     @Override
     public synchronized void printing() {
-        System.out.println("线程ID:" + Thread.currentThread().getId() + " 写开始..");
+
+        System.out.println("线程ID:" + Thread.currentThread().getId() + "synchronized 写开始..");
         try {
             counts++;
-            System.out.println("线程ID:" + Thread.currentThread().getId() + "写 Counts=" + counts);
+            System.out.println("线程ID:" + Thread.currentThread().getId() + "synchronized 写 Counts=" + counts);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        System.out.println("线程ID:" + Thread.currentThread().getId() + " 写结束..");
+        System.out.println("线程ID:" + Thread.currentThread().getId() + "synchronized 写结束..");
+    }
+
+    /**
+     * ReentrantLock锁
+     */
+    @Override
+    public void lock() {
+        //默认构造器初始化为NonfairSync对象，即非公平锁，而带参数的构造器可以指定使用公平锁和非公平锁。
+        ReentrantLock lock = new ReentrantLock(true);
+        System.out.println("线程ID:" + Thread.currentThread().getId() + " Lock 开始..");
+
+        lock.lock();
+
+        try {
+            counts++;
+            System.out.println("线程ID:" + Thread.currentThread().getId() + "Lock 写 Counts=" + counts);
+        }catch (Exception e){
+            e.printStackTrace();
+        }finally {
+            lock.unlock();
+            System.out.println("线程ID:" + Thread.currentThread().getId() + " Lock 写结束..");
+        }
     }
 }

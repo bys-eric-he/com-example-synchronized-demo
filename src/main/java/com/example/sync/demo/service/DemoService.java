@@ -20,4 +20,9 @@ public interface DemoService {
      * 多线程无锁读操作变量
      */
     void read();
+
+    /**
+     * ReentrantLock锁
+     */
+    void lock();
 }
