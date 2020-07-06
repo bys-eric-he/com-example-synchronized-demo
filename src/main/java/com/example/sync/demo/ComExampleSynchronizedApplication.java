@@ -7,12 +7,14 @@ import com.example.sync.demo.service.DemoServiceImpl;
 import com.example.sync.demo.thread.*;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 @SpringBootApplication
 public class ComExampleSynchronizedApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(ComExampleSynchronizedApplication.class, args);
+        AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(Account.class);
 
         //必须保证每个线程使用的是同一个对象 synchronized(this)才有效
         DemoService demoService = new DemoServiceImpl();
